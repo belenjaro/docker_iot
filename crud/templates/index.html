@@ -1,51 +1,91 @@
 {% extends "layout.html" %}
 {% block body %}
+
+<!-- Botón ir a publicar -->
+<div class="row mb-3">
+  <div class="col-md-7 mx-auto text-end">
+    <a href="{{ url_for('publicar') }}" class="btn btn-success">Ir a Publicar</a>
+  </div>
+</div>
+
+<!-- Formulario para cargar contacto -->
 <div class="row">
   <div class="col-md-7 mx-auto">
     <div class="card card-body">
-      <form action="{{url_for('add_contact')}}" method="POST">
-        <legend>Cargar contacto</legend>
+      <form action="{{ url_for('add_contact') }}" method="POST">
+        <h5 class="mb-4">Cargar contacto</h5>
+
+        <!-- Nombre -->
         <div class="form-group">
-          <label class="col-form-label mt-4" for="inputDefault">Nombre completo</label>
-          <input type="text" class="form-control" id="inputDefault" data-ddg-inputtype="unknown" name="nombre">
+          <label for="inputDefault" class="form-label">Nombre completo</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="inputDefault" 
+            name="nombre" 
+            placeholder="Juan Pérez" 
+            required
+            value="{{ request.form.get('nombre', '') }}">
         </div>
-        <div class="form-group">
-          <label class="col-form-label mt-4" for="tel">Teléfono</label>
-          <input type="tel" class="form-control" id="tel" data-ddg-inputtype="unknown" name="tel">
+
+        <!-- Teléfono -->
+        <div class="form-group mt-4">
+          <label for="tel" class="form-label">Teléfono</label>
+          <input 
+            type="tel" 
+            class="form-control" 
+            id="tel" 
+            name="tel" 
+            placeholder="Ej: 3764123456" 
+            required
+            value="{{ request.form.get('tel', '') }}">
         </div>
-        <div class="form-group">
-          <label for="email" class="form-label mt-4">Email</label>
-          <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp"
-            data-ddg-inputtype="identities.emailAddress" data-ddg-autofill="true">
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+
+        <!-- Email -->
+        <div class="form-group mt-4">
+          <label for="email" class="form-label">Email</label>
+          <input 
+            type="email" 
+            name="email" 
+            class="form-control" 
+            id="email" 
+            aria-describedby="emailHelp" 
+            placeholder="ejemplo@correo.com"
+            required
+            value="{{ request.form.get('email', '') }}">
+          <small id="emailHelp" class="form-text text-muted">Nunca compartiremos tu email con nadie.</small>
         </div>
-        <button type="submit" class="btn btn-primary mt-4">guardar</button>
+
+        <!-- Botón -->
+        <button type="submit" class="btn btn-primary mt-4">Guardar</button>
       </form>
     </div>
   </div>
 </div>
-<div class="row pt-5 ">
+
+<!-- Tabla de contactos -->
+<div class="row pt-5">
   <div class="col-md-7 mx-auto">
-    <table class="table table-hover table-default">
-      <thead>
+    <table class="table table-hover table-striped">
+      <thead class="table-dark">
         <tr>
           <th scope="col">ID</th>
           <th scope="col">Nombre completo</th>
-          <th scope="col">teléfono</th>
+          <th scope="col">Teléfono</th>
           <th scope="col">Email</th>
-          <th scope="col">acción</th>
+          <th scope="col">Acción</th>
         </tr>
       </thead>
       <tbody>
         {% for contacto in contactos %}
         <tr>
-          <td>{{contacto.0}}</td>
-          <td>{{contacto.1}}</td>
-          <td>{{contacto.2}}</td>
-          <td>{{contacto.3}}</td>
+          <td>{{ contacto.0 }}</td>
+          <td>{{ contacto.1 }}</td>
+          <td>{{ contacto.2 }}</td>
+          <td>{{ contacto.3 }}</td>
           <td>
-            <a href="{{url_for('conseguir_contacto',id=contacto.0)}}" class="btn btn-secondary">editar</a>
-            <a href="{{url_for('borrar_contacto',id=contacto.0)}}" class="btn btn-danger btn-borrar">borrar</a>
+            <a href="{{ url_for('conseguir_contacto', id=contacto.0) }}" class="btn btn-secondary btn-sm">Editar</a>
+            <a href="{{ url_for('borrar_contacto', id=contacto.0) }}" class="btn btn-danger btn-sm btn-borrar" onclick="return confirm('¿Estás seguro de que querés borrar este contacto?');">Borrar</a>
           </td>
         </tr>
         {% endfor %}
@@ -53,4 +93,5 @@
     </table>
   </div>
 </div>
+
 {% endblock %}
